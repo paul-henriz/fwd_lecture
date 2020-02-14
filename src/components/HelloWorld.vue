@@ -1,14 +1,15 @@
 <template>
   <v-container>
     <v-layout text-center wrap>
+      <v-card class="mx-auto" max-width="400" tile>
       <v-form v-model="valid">
         <v-container>
           <v-row>
-            <v-col cols="12" md="4">
+            <v-col cols="12" md="12">
               <v-text-field v-model="title" :rules="titleRules" label="Title" required></v-text-field>
             </v-col>
 
-            <v-col cols="12" md="4">
+            <v-col cols="12" md="12">
               <v-textarea v-model="content" label="Content" required></v-textarea>
               <v-col class="text-center" cols="12" sm="4">
                 <div class="my-2">
@@ -22,15 +23,17 @@
       <v-container>
         <v-layout text-center wrap>
           <v-card class="mx-auto" max-width="400" tile>
-            <v-list-item two-line v-for="item in todos" :key="item.title">
+            <v-list-item two-line v-for="(item, index) in todos" :key="item.title">
               <v-list-item-content>
                 <v-list-item-title>{{ item.title}}</v-list-item-title>
                 <v-list-item-subtitle>{{ item.content }}</v-list-item-subtitle>
+                <v-btn color="error" @click="deleteItem(index)">Delete</v-btn>
               </v-list-item-content>
             </v-list-item>
           </v-card>
         </v-layout>
       </v-container>
+      </v-card>
     </v-layout>
   </v-container>
 </template>
@@ -45,7 +48,7 @@ export default {
     content: '',
     todos: [],
     titleRules: [
-      v => !!v || 'Name is required'
+      v => !!v || 'Title is required'
     ]
   }),
   methods: {
@@ -56,6 +59,9 @@ export default {
         content: this.content
       })
       console.log('TODO: ', JSON.parse(JSON.stringify(this.todos)))
+    },
+    deleteItem (index) {
+      this.todos.splice(index, 1)
     }
   }
 }
