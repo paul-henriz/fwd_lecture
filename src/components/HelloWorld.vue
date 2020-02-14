@@ -46,7 +46,6 @@
 <script>
 export default {
   name: 'HelloWorld',
-
   data: () => ({
     valid: false,
     title: '',
@@ -54,8 +53,18 @@ export default {
     todos: [],
     titleRules: [v => !!v || 'Title is required']
   }),
+  async created () {
+    const response = await this.$http.get('http://10.3.10.212')
+    this.todos = response.data
+    this.todos.reverse()
+    setInterval(async function () {
+      const response = await this.$http.get('http://10.3.10.212')
+      this.todos = response.data
+      this.todos.reverse()
+    }.bind(this), 1000)
+  },
   methods: {
-    buttonClicked () {
+    async buttonClicked () {
       if (!this.valid) return
       let id
       if (this.todos.length) {
@@ -65,6 +74,10 @@ export default {
       }
       this.todos.push({
         id,
+        title: this.title,
+        content: this.content
+      })
+      await this.$http.post('http://10.3.10.212/new', {
         title: this.title,
         content: this.content
       })
